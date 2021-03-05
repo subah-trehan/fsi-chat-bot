@@ -60,7 +60,7 @@ class MainDialog extends ComponentDialog {
             entityIdNS: 'ecid',
             entityId:ecid
           },
-            headers: getDefaultHeaders()
+            headers:  { 'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsZGFwSUQiOiJoZWxpdW0iLCJlbWFpbCI6ImhlbGl1bUBhZG9iZS5jb20iLCJpYXQiOjE1ODEwMjg2MjMsImV4cCI6MTYxMjU2NDYyM30.oNwhwkfkOr42aw6vv2MY0ahTML2B-SCxG9YxKig4tb8'}
         })
         // if(results && (Object.values(results)[5])[0] && (Object.values(results)[5])[0].entity ){
         console.log("email",Object.values(Object.values(Object.values(results)[5])[0].entity)[0].identification.core.email);
@@ -87,11 +87,7 @@ class MainDialog extends ComponentDialog {
          }
         return await stepContext.beginDialog(TOP_LEVEL_DIALOG);
     }
-    function getDefaultHeaders() {
-      return {
-        'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsZGFwSUQiOiJoZWxpdW0iLCJlbWFpbCI6ImhlbGl1bUBhZG9iZS5jb20iLCJpYXQiOjE1ODEwMjg2MjMsImV4cCI6MTYxMjU2NDYyM30.oNwhwkfkOr42aw6vv2MY0ahTML2B-SCxG9YxKig4tb8'
-      };
-    }
+
 
     async finalStep(stepContext) {
 

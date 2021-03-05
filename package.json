@@ -11,7 +11,7 @@
         "watch": "nodemon ./index.js",
         "lint": "eslint .",
         "lint:watch": "npm run lint --watch",
-   "test": "echo \"No test specified\""
+        "test": "echo \"No test specified\""
     },
     "repository": {
         "type": "git",
