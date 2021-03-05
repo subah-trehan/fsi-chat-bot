@@ -10,8 +10,8 @@
         "start": "node ./index.js",
         "watch": "nodemon ./index.js",
         "lint": "eslint .",
-        "lint:watch": "npm run lint --watch"
-
+        "lint:watch": "npm run lint --watch",
+   "test": "jest"
     },
     "repository": {
         "type": "git",
