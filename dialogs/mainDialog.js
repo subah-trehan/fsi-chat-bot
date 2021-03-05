@@ -12,7 +12,7 @@ const LOGGEDIN_USER = 'logggedInUserProperty';
 const { UserProfile } = require('../userProfile');
 class MainDialog extends ComponentDialog {
     constructor(userState) {
-        
+
         super(MAIN_DIALOG);
         this.userState = userState;
         this.userProfileAccessor = userState.createProperty(USER_PROFILE_PROPERTY);
@@ -23,7 +23,7 @@ class MainDialog extends ComponentDialog {
             this.initialStep.bind(this),
             this.finalStep.bind(this)
         ]));
-        
+
         this.initialDialogId = WATERFALL_DIALOG;
     }
 
@@ -37,7 +37,7 @@ class MainDialog extends ComponentDialog {
          console.log("main dialog");
         const dialogSet = new DialogSet(accessor);
         dialogSet.add(this);
- 
+
         const dialogContext = await dialogSet.createContext(turnContext);
         const results = await dialogContext.continueDialog();
         console.log("status", results)
@@ -48,19 +48,31 @@ class MainDialog extends ComponentDialog {
 
     async initialStep(stepContext) {
         var name = '';
+        var ecid = global.ecid;
+        var orgId= global.orgId;
+        var sandboxName =   global.sandboxName;
          try {
-         let results = await axios.get(global.getProfileUrl); 
+         let results = await axios.get(global.getProfileUrl, {
+          params: {
+            ecid,
+            orgId,
+            sandboxName,
+            entityIdNS: 'ecid',
+            entityId:ecid
+          },
+            headers: getDefaultHeaders()
+        })
         // if(results && (Object.values(results)[5])[0] && (Object.values(results)[5])[0].entity ){
-        console.log("email",Object.values(Object.values(Object.values(results)[5])[0].entity)[0].identification.core.email); 
+        console.log("email",Object.values(Object.values(Object.values(results)[5])[0].entity)[0].identification.core.email);
         if(results && Object.values(Object.values(results)[5])[0].entity && Object.values(Object.values(Object.values(results)[5])[0].entity)[0].identification.core.email){
             console.log("inside");
            console.log("####accountid :######"+Object.values(Object.values(Object.values(results)[5])[0].entity)[0].identification.fsi.accountId);
                     console.log("#### name:######"+Object.values(Object.values(results)[5])[0].entity.person.name.firstName);
                                console.log("####email :######"+Object.values(Object.values(Object.values(results)[5])[0].entity)[0].identification.core.email);
-       
+
               loggedInUser = Object.values(Object.values(results)[5])[0].entity.person.name.firstName;
               accountId = Object.values(Object.values(Object.values(results)[5])[0].entity)[0].identification.fsi.accountId ;
-          
+
            console.log("logged in user",loggedInUser);
          }
          else{
@@ -75,9 +87,14 @@ class MainDialog extends ComponentDialog {
          }
         return await stepContext.beginDialog(TOP_LEVEL_DIALOG);
     }
+    function getDefaultHeaders() {
+      return {
+        'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsZGFwSUQiOiJoZWxpdW0iLCJlbWFpbCI6ImhlbGl1bUBhZG9iZS5jb20iLCJpYXQiOjE1ODEwMjg2MjMsImV4cCI6MTYxMjU2NDYyM30.oNwhwkfkOr42aw6vv2MY0ahTML2B-SCxG9YxKig4tb8'
+      };
+    }
 
     async finalStep(stepContext) {
-      
+
         if( stepContext.result && stepContext.result.review == 'Yes'){
        console.log("acknowledgementStep:condition1")
         return await stepContext.beginDialog(REVIEW_SELECTION_DIALOG);

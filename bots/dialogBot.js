@@ -37,8 +37,8 @@ class DialogBot extends ActivityHandler {
         this.orgID = userState.createProperty(ORG_ID);
         this.sandboxName = userState.createProperty(SANDBOX_NAME);
         this.ecid = userState.createProperty(ECID);
-        
-        
+
+
         this.onMessage(async (context, next) => {
             console.log('Running dialog with Message Activity.');
             console.log("");
@@ -49,17 +49,17 @@ class DialogBot extends ActivityHandler {
             // By calling next() you ensure that the next BotHandler is run.
             await next();
         });
-        
-        
-          this.onEvent(async (turnContext) => { 
+
+
+          this.onEvent(async (turnContext) => {
              ecid = turnContext["_activity"].value.ecid;
              orgID = turnContext["_activity"].value.orgID;
              sandboxName = turnContext["_activity"].value.sandboxName;
              eeIngestUrl = 'https://adobeioruntime.net/api/v1/web/demoteam/demo-system/setChatbotEvent.json?sandboxName='+sandboxName+'&orgID='+orgID+'&ecid='+global.ecid;
-             getProfileUrl= 'https://adobeioruntime.net/api/v1/web/demoteam/demo-system/get-profile-info?ecid='+ecid+'&orgID='+orgID+'&sandboxName='+sandboxName;
+             getProfileUrl= 'https://dashboard.adobedemo.com/api/aep/profile';
               console.log("###");
             // await next();
-           
+
         });
     }
 
