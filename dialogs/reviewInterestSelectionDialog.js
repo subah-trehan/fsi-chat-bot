@@ -16,7 +16,7 @@ class InterestReviewSelectionDialog extends ComponentDialog {
         super(INTEREST_REVIEW_SELECTION_DIALOG);
 
         // Define a "done" response for the interest selection prompt.
-        this.doneOption = 'No'; 
+        this.doneOption = 'No';
 
         // Define value names for values tracked inside the dialogs.
         this.interestSelected = 'value-interestSelected';
@@ -26,8 +26,8 @@ class InterestReviewSelectionDialog extends ComponentDialog {
         // Define the company choices for the  selection prompt.
         this.reviewOptions = ['Yes', 'No'];
         // Define the interest choices for the interest selection prompt.
-        this.interestOptions = ['Credit Card', 'Savings', 'Insurance','No']; 
-         
+        this.interestOptions = ['Credit Card', 'Savings', 'Insurance','No'];
+
         this.addDialog(new ReviewDialog());
         this.addDialog(new ChoicePrompt(CHOICE_PROMPT));
          this.addDialog(new TextPrompt(TEXT_PROMPT));
@@ -38,7 +38,7 @@ class InterestReviewSelectionDialog extends ComponentDialog {
              this.continueWithSelectedInterest.bind(this),
              this.confirmSelectionStep.bind(this),
              this.retrieveConfirmSelectionStep.bind(this),
-             
+
         ]));
 
         this.initialDialogId = WATERFALL_DIALOG;
@@ -50,7 +50,7 @@ class InterestReviewSelectionDialog extends ComponentDialog {
         stepContext.values[this.interestSelected] = list;
 
         // Create a prompt message.
-        let message = 'Would you like to learn more about our lastest offers?';
+        let message = 'Would you like to learn more about our latest offers?';
         const options = this.interestOptions.filter(function(item) { return item !== list[0]; })
         return await stepContext.prompt(CHOICE_PROMPT, {
             prompt: message,
@@ -72,16 +72,16 @@ class InterestReviewSelectionDialog extends ComponentDialog {
         if (!done && list.length > 0) {
             list =[];
              let offerUrl = eeIngestUrl + '&offer='+choice.value;
-             let results = await axios.get(offerUrl); 
+             let results = await axios.get(offerUrl);
               if (!loggedInUser) {
              stepContext.values.userInfo = new UserProfile();
             const promptOptions = { prompt: 'Please share your email address for further communication.' };
-            return await stepContext.prompt(TEXT_PROMPT, promptOptions); 
+            return await stepContext.prompt(TEXT_PROMPT, promptOptions);
             }
              return await stepContext.next();
-             
-              
-            
+
+
+
         } else {
             console.log("end Selection");
             //return await stepContext.replaceDialog(INTEREST_REVIEW_SELECTION_DIALOG, list);
@@ -89,21 +89,21 @@ class InterestReviewSelectionDialog extends ComponentDialog {
              return await stepContext.beginDialog(REVIEW_RATING_DIALOG);
         }
     }
-    
+
       async continueWithSelectedInterest(stepContext) {
           if(endSelection){
                 endSelection = false;
                 return await stepContext.endDialog();
-               
+
           }
         await stepContext.context.sendActivity('I created a case and our consulant will get back to you today with the offer details.');
                await stepContext.context.sendActivity('Is there anything else I can help you with today?');
              return await stepContext.next();
     }
-    
+
        async confirmSelectionStep(stepContext) {
         stepContext.values.userInfo = new UserProfile();
-        
+
         const list = Array.isArray(stepContext.options) ? stepContext.options : [];
         stepContext.values[this.reviewOptionSelected] = list;
         let message = '';
@@ -146,11 +146,11 @@ list.push(choice.value);
                     return await stepContext.replaceDialog(INTEREST_REVIEW_SELECTION_DIALOG);
                }else{
                   return await stepContext.endDialog();
-                  
+
                }
             }
-            
-        } 
+
+        }
     }
 }
 
