@@ -54,7 +54,7 @@ class InterestReviewSelectionDialog extends ComponentDialog {
         const options = this.interestOptions.filter(function(item) { return item !== list[0]; })
         return await stepContext.prompt(CHOICE_PROMPT, {
             prompt: message,
-            retryPrompt: 'Would you like to learn more about our lastest offers?',
+            retryPrompt: 'Would you like to learn more about our latest offers?',
             choices: options
         });
     }
