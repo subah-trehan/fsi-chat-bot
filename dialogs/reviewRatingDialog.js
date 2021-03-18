@@ -23,7 +23,7 @@ class ReviewRatingDialog extends ComponentDialog {
         this.ratingOptions = ['1', '2', '3','4','5'];
 
         this.addDialog(new ChoicePrompt(CHOICE_PROMPT));
-       
+
         //this.addDialog(new ReviewSelectionDialog());
         this.addDialog(new WaterfallDialog(WATERFALL_DIALOG, [
             this.selectionStep.bind(this),
@@ -71,16 +71,44 @@ class ReviewRatingDialog extends ComponentDialog {
         }
 
         if (done || list.length > 0) {
-            
+
              //eeIngestUrl = eeIngestUrl + '&rating='+choice.value;
-             let ratingUrl = eeIngestUrl + '&rating='+choice.value;
-             console.log("ratingUrl -final:"+ratingUrl);
-             console.log("eeIngestUrl -global:"+global.eeIngestUrl);
-             let results = await axios.get(ratingUrl); 
-             console.log("####results :######"+results.data.body);
+             var formData = global.formData;
+             console.log("formdata")
+             if(formData){
+             formData.body.xdmEntity.eventType = "Bot - Rate Chat - "+choice.value;
+             formData.body.xdmEntity['_'+tenantID] = {
+                                                       "identification":{"core" :{
+                                                         "ecid": global.ecid
+                                                       }},
+                                                       "interactionDetails":{"core":{
+                                                      "bot":{
+                                                       "botSatisfaction": choice.value
+                                                         }
+                                                       }
+                                                     }
+                                                   }
+             console.log("formData----",formData);
+             //Ingest data in AEP using streaming end point
+             let headers = {
+               "Content-Type": "application/json",
+             }
+             let result = await axios.post(global.streamingEnpointUrl, formData, {
+               headers: headers
+             });
+             let data = result.data;
+             //let offerUrl = eeIngestUrl + '&offer='+choice.value;
+             // let results = await axios.get(offerUrl);
+
+              console.log("results",data);
+             //let ratingUrl = eeIngestUrl + '&rating='+choice.value;
+             //console.log("ratingUrl -final:"+ratingUrl);
+             //console.log("eeIngestUrl -global:"+global.eeIngestUrl);
+             //let results = await axios.get(ratingUrl);
+             //console.log("####results :######"+results.data.body);
             // If they're done, exit and return their list.
              return await stepContext.endDialog();
-            
+
         } else {
             // Otherwise, repeat this dialog, passing in the list from this iteration.
             return await stepContext.replaceDialog(REVIEW_RATING_DIALOG, list);

@@ -59,11 +59,14 @@ class InterestReviewSelectionDialog extends ComponentDialog {
         });
     }
 
+
+
     async retreiveInterestSelectionStep(stepContext) {
+      console.log("retreiveInterestSelectionStep1");
         var list = stepContext.values[this.interestSelected];
         const choice = stepContext.result;
         const done = choice.value === this.doneOption;
- console.log("retreiveInterestSelectionStep");
+
         if (!done) {
             // If they chose a company, add it to the list.
             list.push(choice.value);
@@ -71,13 +74,41 @@ class InterestReviewSelectionDialog extends ComponentDialog {
 
         if (!done && list.length > 0) {
             list =[];
-             let offerUrl = eeIngestUrl + '&offer='+choice.value;
-             let results = await axios.get(offerUrl);
+            var formData = global.formData;
+            console.log("formdata")
+            if(formData){
+            formData.body.xdmEntity.eventType = "Bot - Interested in - "+choice.value;
+            formData.body.xdmEntity['_'+tenantID] = {
+                                                      "identification":{"core" :{
+                                                        "ecid": global.ecid
+                                                      }},
+                                                      "interactionDetails":{"core":{
+                                                     "bot":{
+                                                      "botTopic": choice.value
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+            console.log("formData----",formData);
+            //Ingest data in AEP using streaming end point
+            let headers = {
+              "Content-Type": "application/json",
+            }
+            let result = await axios.post(global.streamingEnpointUrl, formData, {
+              headers: headers
+            });
+            let data = result.data;
+            //let offerUrl = eeIngestUrl + '&offer='+choice.value;
+            // let results = await axios.get(offerUrl);
+             console.log("results",data);
+           }
               if (!loggedInUser) {
-             stepContext.values.userInfo = new UserProfile();
-            const promptOptions = { prompt: 'Please share your email address for further communication.' };
+                console.log("retreiveInterestSelectionStep4");
+            stepContext.values.userInfo = new UserProfile();
+            const promptOptions = { prompt: 'Please share your email address for further communication.'};
             return await stepContext.prompt(TEXT_PROMPT, promptOptions);
             }
+
              return await stepContext.next();
 
 
