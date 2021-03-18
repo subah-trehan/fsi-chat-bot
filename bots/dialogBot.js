@@ -61,13 +61,13 @@ class DialogBot extends ActivityHandler {
              //sandboxName = 'prod';
              eeIngestUrl = 'https://dashboard-test.adobedemo.com/api/aep';
              getProfileUrl= 'https://dashboard.adobedemo.com/api/aep/profile';
-             await this.ingestData(context);
+             ingestData();
             // await next();
 
         });
     }
 
-    async ingestData(context){
+    async ingestData(){
       //Call AEP API to get streamingEndpoint ,enant id, datasets
       let coreResults = await axios.get(global.eeIngestUrl, {
        params: {
