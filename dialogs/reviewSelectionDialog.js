@@ -93,7 +93,7 @@ class ReviewSelectionDialog extends ComponentDialog {
              console.log("formdata-interest selection")
              if(formData){
              formData.body.xdmEntity.eventType = "Bot - Interested in - "+choice.value;
-             formData.body.xdmEntity['_'+tenantID] = {
+             formData.body.xdmEntity['_'+global.tenantID] = {
                                                        "identification":{"core" :{
                                                          "ecid": global.ecid
                                                        }},
