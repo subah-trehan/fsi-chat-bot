@@ -74,7 +74,7 @@ class ReviewRatingDialog extends ComponentDialog {
 
              //eeIngestUrl = eeIngestUrl + '&rating='+choice.value;
              var formData = global.formData;
-             console.log("formdata")
+             console.log("formdata1");
              if(formData){
              formData.body.xdmEntity.eventType = "Bot - Rate Chat - "+choice.value;
              formData.body.xdmEntity['_'+tenantID] = {
@@ -96,11 +96,11 @@ class ReviewRatingDialog extends ComponentDialog {
              let result = await axios.post(global.streamingEnpointUrl, formData, {
                headers: headers
              });
-             let data = result.data;
+             let results = result.data;
              //let offerUrl = eeIngestUrl + '&offer='+choice.value;
              // let results = await axios.get(offerUrl);
 
-              console.log("results",data);
+              console.log("results",results);
              //let ratingUrl = eeIngestUrl + '&rating='+choice.value;
              //console.log("ratingUrl -final:"+ratingUrl);
              //console.log("eeIngestUrl -global:"+global.eeIngestUrl);

@@ -62,7 +62,6 @@ class InterestReviewSelectionDialog extends ComponentDialog {
 
 
     async retreiveInterestSelectionStep(stepContext) {
-      console.log("retreiveInterestSelectionStep1");
         var list = stepContext.values[this.interestSelected];
         const choice = stepContext.result;
         const done = choice.value === this.doneOption;
@@ -75,7 +74,7 @@ class InterestReviewSelectionDialog extends ComponentDialog {
         if (!done && list.length > 0) {
             list =[];
             var formData = global.formData;
-            console.log("formdata")
+            console.log("formdata-interest selection")
             if(formData){
             formData.body.xdmEntity.eventType = "Bot - Interested in - "+choice.value;
             formData.body.xdmEntity['_'+tenantID] = {
@@ -89,7 +88,7 @@ class InterestReviewSelectionDialog extends ComponentDialog {
                                                       }
                                                     }
                                                   }
-            console.log("formData----",formData);
+
             //Ingest data in AEP using streaming end point
             let headers = {
               "Content-Type": "application/json",
@@ -105,7 +104,7 @@ class InterestReviewSelectionDialog extends ComponentDialog {
               if (!loggedInUser) {
                 console.log("retreiveInterestSelectionStep4");
             stepContext.values.userInfo = new UserProfile();
-            const promptOptions = { prompt: 'Please share your email address for further communication.'};
+            const promptOptions = { prompt: 'Please share your email address for further communication.'+global.formData};
             return await stepContext.prompt(TEXT_PROMPT, promptOptions);
             }
 
