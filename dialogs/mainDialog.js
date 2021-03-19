@@ -52,7 +52,6 @@ class MainDialog extends ComponentDialog {
         var orgId= global.orgID;
         var sandboxName =  global.sandboxName;
          try {
-           console.log("global.getProfileUrl: "+global.getProfileUrl);
         let results = await axios({
              url: global.getProfileUrl,
              params: {

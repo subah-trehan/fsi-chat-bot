@@ -56,9 +56,7 @@ class DialogBot extends ActivityHandler {
           this.onEvent(async (turnContext) => {
              ecid = turnContext["_activity"].value.ecid;
              orgID = turnContext["_activity"].value.orgID;
-            //  orgID = 'E8475990589B24A90A495DDD@AdobeOrg';
              sandboxName = turnContext["_activity"].value.sandboxName;
-             //sandboxName = 'prod';
              eeIngestUrl ="https://dashboard-test.adobedemo.com/api/aep";
              getProfileUrl="https://dashboard.adobedemo.com/api/aep/profile";
              ingestData();
