@@ -109,12 +109,13 @@ class ReviewRatingDialog extends ComponentDialog {
             // If they're done, exit and return their list.
              return await stepContext.endDialog();
 
-        } else {
+        }
+      } else {
             // Otherwise, repeat this dialog, passing in the list from this iteration.
             return await stepContext.replaceDialog(REVIEW_RATING_DIALOG, list);
         }
     }
-}
+
 }
 module.exports.ReviewRatingDialog = ReviewRatingDialog;
 module.exports.REVIEW_RATING_DIALOG = REVIEW_RATING_DIALOG;
