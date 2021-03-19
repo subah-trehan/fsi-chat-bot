@@ -59,8 +59,8 @@ class DialogBot extends ActivityHandler {
             //  orgID = 'E8475990589B24A90A495DDD@AdobeOrg';
              sandboxName = turnContext["_activity"].value.sandboxName;
              //sandboxName = 'prod';
-             eeIngestUrl = 'https://dashboard-test.adobedemo.com/api/aep';
-             getProfileUrl= 'https://dashboard.adobedemo.com/api/aep/profile';
+             eeIngestUrl ="https://dashboard-test.adobedemo.com/api/aep";
+             getProfileUrl="https://dashboard.adobedemo.com/api/aep/profile";
              ingestData();
             // await next();
 
@@ -69,14 +69,15 @@ class DialogBot extends ActivityHandler {
 
     async ingestData(){
       //Call AEP API to get streamingEndpoint ,enant id, datasets
-      let coreResults = await axios.get(global.eeIngestUrl, {
-       params: {
-         orgId:orgID,
-         sandboxName:sandboxName
-       },
-         headers:  { 'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsZGFwSUQiOiJoZWxpdW0iLCJlbWFpbCI6ImhlbGl1bUBhZG9iZS5jb20iLCJpYXQiOjE1ODEwMjg2MjMsImV4cCI6MTYxMjU2NDYyM30.oNwhwkfkOr42aw6vv2MY0ahTML2B-SCxG9YxKig4tb8'}
-      })
-
+      let coreResults = await axios({
+           url: global.eeIngestUrl,
+           params: {
+             orgId:orgID,
+             sandboxName:sandboxName
+           },
+           method: 'GET',
+            headers:  { 'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsZGFwSUQiOiJoZWxpdW0iLCJlbWFpbCI6ImhlbGl1bUBhZG9iZS5jb20iLCJpYXQiOjE1ODEwMjg2MjMsImV4cCI6MTYxMjU2NDYyM30.oNwhwkfkOr42aw6vv2MY0ahTML2B-SCxG9YxKig4tb8'}
+         });
       streamingEnpointUrl = coreResults.data.result.streamingEnpointUrl;
       tenantID = coreResults.data.result.tenantID;
       schemaID = "93ee928c3766396daccb4145ef904429acb288f408bbbd94";

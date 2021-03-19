@@ -49,29 +49,30 @@ class MainDialog extends ComponentDialog {
     async initialStep(stepContext) {
         var name = '';
         var ecid = global.ecid;
-        var orgId= global.orgId;
-        var sandboxName =   global.sandboxName;
+        var orgId= global.orgID;
+        var sandboxName =  global.sandboxName;
          try {
-         let results = await axios.get(global.getProfileUrl, {
-          params: {
-            ecid,
-            orgId,
-            sandboxName,
-            entityIdNS: 'ecid',
-            entityId:ecid
-          },
-            headers:  { 'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsZGFwSUQiOiJoZWxpdW0iLCJlbWFpbCI6ImhlbGl1bUBhZG9iZS5jb20iLCJpYXQiOjE1ODEwMjg2MjMsImV4cCI6MTYxMjU2NDYyM30.oNwhwkfkOr42aw6vv2MY0ahTML2B-SCxG9YxKig4tb8'}
-        })
-        // if(results && (Object.values(results)[5])[0] && (Object.values(results)[5])[0].entity ){
-        console.log("email",Object.values(Object.values(Object.values(results)[5])[0].entity)[0].identification.core.email);
-        if(results && Object.values(Object.values(results)[5])[0].entity && Object.values(Object.values(Object.values(results)[5])[0].entity)[0].identification.core.email){
-            console.log("inside");
-           console.log("####accountid :######"+Object.values(Object.values(Object.values(results)[5])[0].entity)[0].identification.fsi.accountId);
-                    console.log("#### name:######"+Object.values(Object.values(results)[5])[0].entity.person.name.firstName);
-                               console.log("####email :######"+Object.values(Object.values(Object.values(results)[5])[0].entity)[0].identification.core.email);
+           console.log("global.getProfileUrl: "+global.getProfileUrl);
+        let results = await axios({
+             url: global.getProfileUrl,
+             params: {
+               ecid:ecid,
+               orgId:orgId,
+               sandboxName:sandboxName,
+               entityIdNS: 'ecid',
+               entityId:ecid
+             },
+             method: 'GET',
+             headers: { 'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsZGFwSUQiOiJoZWxpdW0iLCJlbWFpbCI6ImhlbGl1bUBhZG9iZS5jb20iLCJpYXQiOjE1ODEwMjg2MjMsImV4cCI6MTYxMjU2NDYyM30.oNwhwkfkOr42aw6vv2MY0ahTML2B-SCxG9YxKig4tb8'}
+           });
+           console.log("results: "+results.data)
+        if(results && Object.values(results.data.result)[0].entity.identityMap.email[0].id){
+           console.log("####accountid :######"+Object.values(results.data.result)[0].entity._salesvelocity.identification.fsi.accountId);
+                    console.log("#### name:######"+Object.values(results.data.result)[0].entity.person.name.firstName);
+                              // console.log("####email :######"+Object.values(Object.values(Object.values(results.data.result)[0].entity)[0].identification.core.email);
 
-              loggedInUser = Object.values(Object.values(results)[5])[0].entity.person.name.firstName;
-              accountId = Object.values(Object.values(Object.values(results)[5])[0].entity)[0].identification.fsi.accountId ;
+              loggedInUser = Object.values(results.data.result)[0].entity.person.name.firstName;
+              accountId = Object.values(results.data.result)[0].entity._salesvelocity.identification.fsi.accountId ;
 
            console.log("logged in user",loggedInUser);
          }
@@ -81,7 +82,7 @@ class MainDialog extends ComponentDialog {
          }
         console.log("Logged in user");
          }catch(e){
-             console.log("There are no profiles in AEP ");
+             console.log("There are no profiles in AEP ",e);
              global.loggedInUser = '';
                global.accountId = '';
          }
