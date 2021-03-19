@@ -104,7 +104,7 @@ class InterestReviewSelectionDialog extends ComponentDialog {
               if (!loggedInUser) {
                 console.log("retreiveInterestSelectionStep4");
             stepContext.values.userInfo = new UserProfile();
-            const promptOptions = { prompt: 'Please share your email address for further communication.'+global.formData};
+            const promptOptions = { prompt: 'Please share your email address for further communication.'};
             return await stepContext.prompt(TEXT_PROMPT, promptOptions);
             }
 
@@ -126,7 +126,7 @@ class InterestReviewSelectionDialog extends ComponentDialog {
                 return await stepContext.endDialog();
 
           }
-        await stepContext.context.sendActivity('I created a case and our consulant will get back to you today with the offer details.');
+        await stepContext.context.sendActivity('I created a case and our consulant will get back to you today with the offer details.'+global.formData);
                await stepContext.context.sendActivity('Is there anything else I can help you with today?');
              return await stepContext.next();
     }
