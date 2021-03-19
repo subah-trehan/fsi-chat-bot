@@ -29,7 +29,7 @@ class DialogBot extends ActivityHandler {
         global.streamingEnpointUrl="";
         global.tenantID="";
         global.schemaID = "93ee928c3766396daccb4145ef904429acb288f408bbbd94";
-        global.formData ="";
+        global.formData = {};
         if (!conversationState) throw new Error('[DialogBot]: Missing parameter. conversationState is required');
         if (!userState) throw new Error('[DialogBot]: Missing parameter. userState is required');
         if (!dialog) throw new Error('[DialogBot]: Missing parameter. dialog is required');
@@ -59,7 +59,53 @@ class DialogBot extends ActivityHandler {
              sandboxName = turnContext["_activity"].value.sandboxName;
              eeIngestUrl ="https://dashboard-test.adobedemo.com/api/aep";
              getProfileUrl="https://dashboard.adobedemo.com/api/aep/profile";
-             ingestData();
+             let coreResults = await axios({
+                  url: global.eeIngestUrl,
+                  params: {
+                    orgId:orgID,
+                    sandboxName:sandboxName
+                  },
+                  method: 'GET',
+                   headers:  { 'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsZGFwSUQiOiJoZWxpdW0iLCJlbWFpbCI6ImhlbGl1bUBhZG9iZS5jb20iLCJpYXQiOjE1ODEwMjg2MjMsImV4cCI6MTYxMjU2NDYyM30.oNwhwkfkOr42aw6vv2MY0ahTML2B-SCxG9YxKig4tb8'}
+                });
+             streamingEnpointUrl = coreResults.data.result.streamingEnpointUrl;
+             tenantID = coreResults.data.result.tenantID;
+             schemaID = "93ee928c3766396daccb4145ef904429acb288f408bbbd94";
+             let dataSets = coreResults.data.result.dataSets;
+             console.log('streamingEnpointUrl : '+streamingEnpointUrl + '   tenantID: '+tenantID);
+             //getDatasetByName
+             let datasetID = Object.entries(dataSets).find(obj => obj[1].name === "Demo System - Event Dataset for Website (FSI v1.0)")[0].replace(/%/g, "");
+
+             //Update XDM schema
+             formData = {
+               "header": {
+                       "datasetId": dataSets[datasetID].id,
+                       "imsOrgId": orgID,
+                       "source": {
+                         "name": "web"
+                       },
+                       "schemaRef": {
+                         "id": "https://ns.adobe.com/"+tenantID+"/schemas/"+schemaID,
+                         "contentType": "application/vnd.adobe.xed-full+json;version=1"
+                       }
+                     },
+                     "body": {
+                       "xdmMeta": {
+                         "schemaRef": {
+                           "id": "https://ns.adobe.com/"+tenantID+"/schemas/"+schemaID,
+                           "contentType": "application/vnd.adobe.xed-full+json;version=1"
+                         }
+                       },
+                       "xdmEntity": {
+                         "_id": ""+Date.now(),
+                         "timestamp": ""+new Date().toISOString()
+                         //"eventType": "Bot - Interested in - "+choice.value
+
+                         }
+                       }
+                     }
+
+             //ingestData();
             // await next();
 
         });
