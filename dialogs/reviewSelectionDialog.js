@@ -26,7 +26,7 @@ class ReviewSelectionDialog extends ComponentDialog {
         this.topicOptions = ['Check my account balance', 'Learn more about our latest offers', 'Check your application status'];
 
         this.reviewOptionSelected = 'value-reviewOptionSelected';
-        
+
         // Define value names for values tracked inside the dialogs.
         this.ratingSelected = 'value-ratingSelected';
 
@@ -59,7 +59,7 @@ class ReviewSelectionDialog extends ComponentDialog {
     }
 
     async mainSelectionStep(stepContext) {
-        
+
         const list = Array.isArray(stepContext.options) ? stepContext.options : [];
         stepContext.values[this.optionSelected] = list;
         let message = '';
@@ -76,19 +76,50 @@ class ReviewSelectionDialog extends ComponentDialog {
         var list = stepContext.values[this.optionSelected];
         const choice = stepContext.result;
         const done = choice.value === this.doneOption;
-        
+
         if (!done) {
-           
+
             list.push(choice.value);
         }
 
         if (done || list.length > 0) {
-            
-            
+
+
               //eeIngestUrl = eeIngestUrl + '&offer='+choice.value;
-              let offerUrl = eeIngestUrl + '&offer='+choice.value;
-             let results = await axios.get(offerUrl); 
-             console.log("####results :######"+results.data.body);
+            //  let offerUrl = eeIngestUrl + '&offer='+choice.value;
+             //let results = await axios.get(offerUrl);
+             //console.log("####results :######"+results.data.body);
+             var formData = global.formData;
+             console.log("formdata-interest selection")
+             if(formData){
+             formData.body.xdmEntity.eventType = "Bot - Interested in - "+choice.value;
+             formData.body.xdmEntity['_'+tenantID] = {
+                                                       "identification":{"core" :{
+                                                         "ecid": global.ecid
+                                                       }},
+                                                       "interactionDetails":{"core":{
+                                                      "bot":{
+                                                       "botTopic": choice.value
+                                                         }
+                                                       }
+                                                     }
+                                                   }
+
+             //Ingest data in AEP using streaming end point
+             let headers = {
+               "Content-Type": "application/json",
+             }
+             let result = await axios.post(global.streamingEnpointUrl, formData, {
+               headers: headers
+             });
+             let data = result.data;
+             //let offerUrl = eeIngestUrl + '&offer='+choice.value;
+             // let results = await axios.get(offerUrl);
+              console.log("results",data);
+            }
+
+
+
             // If they're done, exit and return their list.
             if(`${ list[0] }` == this.topicOptions[0]){
                 list =[];
@@ -106,13 +137,13 @@ class ReviewSelectionDialog extends ComponentDialog {
                  list =[];
                   return await stepContext.beginDialog(APPLICATION_STATUS_DIALOG);
             }
-            
+
         } else {
             // Otherwise, repeat this dialog, passing in the list from this iteration.
             return await stepContext.replaceDialog(REVIEW_SELECTION_DIALOG);
         }
     }
-    
+
       async confirmSelectionStep(stepContext) {
           console.log("global.action", global.action)
           if(global.action == 1){
@@ -133,13 +164,13 @@ class ReviewSelectionDialog extends ComponentDialog {
      async retrieveConfirmSelectionStep(stepContext) {
         // Retrieve their selection list, the choice they made, and whether they chose to finish.
           if(global.action==1){
-              global.action = 0; 
+              global.action = 0;
         var list = stepContext.values[this.reviewOptionSelected];
         const choice = stepContext.result;
         const done = choice.value === this.doneOption;
          console.log('after2')
         if (!done) {
-           
+
             list.push(choice.value);
         }
 
@@ -154,29 +185,29 @@ class ReviewSelectionDialog extends ComponentDialog {
             }
             if(`${ list[0] }` == this.reviewOptions[0]){
                  list =[];
-                // console.log(`reviewDialog ${ list[0] }`)  
+                // console.log(`reviewDialog ${ list[0] }`)
                   return await stepContext.replaceDialog(REVIEW_SELECTION_DIALOG);
             }
-            
-        } 
+
+        }
         }
           return await stepContext.next();
     }
-    
+
      async repeatSelectionStep(stepContext) {
           console.log('after3')
         // Retrieve their selection list, the choice they made, and whether they chose to finish.
           if(global.repeatSelection == true){
               global.repeatSelection = false ;
                   return await stepContext.replaceDialog(REVIEW_SELECTION_DIALOG);
-            
+
         }
            return await stepContext.endDialog();
     }
-    
-    
-    
-    
+
+
+
+
 }
 
 module.exports.ReviewSelectionDialog = ReviewSelectionDialog;
