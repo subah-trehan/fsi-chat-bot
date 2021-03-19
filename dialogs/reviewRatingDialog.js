@@ -115,6 +115,6 @@ class ReviewRatingDialog extends ComponentDialog {
         }
     }
 }
-
+}
 module.exports.ReviewRatingDialog = ReviewRatingDialog;
 module.exports.REVIEW_RATING_DIALOG = REVIEW_RATING_DIALOG;
