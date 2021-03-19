@@ -101,6 +101,7 @@ class ReviewRatingDialog extends ComponentDialog {
              // let results = await axios.get(offerUrl);
 
               console.log("results",results);
+            }
              //let ratingUrl = eeIngestUrl + '&rating='+choice.value;
              //console.log("ratingUrl -final:"+ratingUrl);
              //console.log("eeIngestUrl -global:"+global.eeIngestUrl);
@@ -109,7 +110,7 @@ class ReviewRatingDialog extends ComponentDialog {
             // If they're done, exit and return their list.
              return await stepContext.endDialog();
 
-        }
+
       } else {
             // Otherwise, repeat this dialog, passing in the list from this iteration.
             return await stepContext.replaceDialog(REVIEW_RATING_DIALOG, list);
