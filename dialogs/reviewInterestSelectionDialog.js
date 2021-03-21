@@ -19,7 +19,7 @@ class InterestReviewSelectionDialog extends ComponentDialog {
         this.doneOption = 'No';
 
         // Define value names for values tracked inside the dialogs.
-        this.interestSelected = 'value-interestSelected';
+        this.interestSelected = 'value-interestSelected'
         // Define value names for values tracked inside the dialogs.
         this.reviewOptionSelected = 'value-reviewOptionSelected';
 
@@ -75,6 +75,8 @@ class InterestReviewSelectionDialog extends ComponentDialog {
             list =[];
             var formData = global.formData;
             console.log("formdata-interest selection")
+            const promptOptions = { prompt: 'global.formData: '+global.formData};
+            return await stepContext.prompt(TEXT_PROMPT, promptOptions);
             if(formData){
             formData.body.xdmEntity.eventType = "Bot - Interested in - "+choice.value;
             formData.body.xdmEntity['_'+global.tenantID] = {
@@ -88,6 +90,7 @@ class InterestReviewSelectionDialog extends ComponentDialog {
                                                       }
                                                     }
                                                   }
+
 
             //Ingest data in AEP using streaming end point
             let headers = {

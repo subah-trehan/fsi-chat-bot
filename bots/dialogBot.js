@@ -59,8 +59,9 @@ class DialogBot extends ActivityHandler {
              sandboxName = turnContext["_activity"].value.sandboxName;
              eeIngestUrl ="https://dashboard-test.adobedemo.com/api/aep";
              getProfileUrl="https://dashboard.adobedemo.com/api/aep/profile";
+              console.log('this event');
              let coreResults = await axios({
-                  url: global.eeIngestUrl,
+                  url: 'https://dashboard-test.adobedemo.com/api/aep',
                   params: {
                     orgId:orgID,
                     sandboxName:sandboxName
