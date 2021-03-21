@@ -63,22 +63,22 @@ class InterestReviewSelectionDialog extends ComponentDialog {
       let datasetID = Object.entries(dataSets).find(obj => obj[1].name === "Demo System - Event Dataset for Website (FSI v1.0)")[0].replace(/%/g, "");
 
       //Update XDM schema
-      formData = {
+      global.formData = {
         "header": {
                 "datasetId": dataSets[datasetID].id,
-                "imsOrgId": orgID,
+                "imsOrgId": global.orgID,
                 "source": {
                   "name": "web"
                 },
                 "schemaRef": {
-                  "id": "https://ns.adobe.com/"+tenantID+"/schemas/"+schemaID,
+                  "id": "https://ns.adobe.com/"+global.tenantID+"/schemas/"+global.schemaID,
                   "contentType": "application/vnd.adobe.xed-full+json;version=1"
                 }
               },
               "body": {
                 "xdmMeta": {
                   "schemaRef": {
-                    "id": "https://ns.adobe.com/"+tenantID+"/schemas/"+schemaID,
+                    "id": "https://ns.adobe.com/"+global.tenantID+"/schemas/"+global.schemaID,
                     "contentType": "application/vnd.adobe.xed-full+json;version=1"
                   }
                 },
@@ -114,7 +114,6 @@ class InterestReviewSelectionDialog extends ComponentDialog {
         var list = stepContext.values[this.interestSelected];
         const choice = stepContext.result;
         const done = choice.value === this.doneOption;
-        ingestData();
         if (!done) {
             // If they chose a company, add it to the list.
             list.push(choice.value);
