@@ -19,7 +19,7 @@ class InterestReviewSelectionDialog extends ComponentDialog {
         this.doneOption = 'No';
 
         // Define value names for values tracked inside the dialogs.
-        this.interestSelected = 'value-interestSelected'
+        this.interestSelected = 'value-interestSelected';
         // Define value names for values tracked inside the dialogs.
         this.reviewOptionSelected = 'value-reviewOptionSelected';
 
@@ -44,11 +44,60 @@ class InterestReviewSelectionDialog extends ComponentDialog {
         this.initialDialogId = WATERFALL_DIALOG;
     }
 
+    async ingestData(){
+      let coreResults = await axios({
+           url: global.eeIngestUrl,
+           params: {
+             orgId:global.orgID,
+             sandboxName:global.sandboxName
+           },
+           method: 'GET',
+            headers:  { 'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsZGFwSUQiOiJoZWxpdW0iLCJlbWFpbCI6ImhlbGl1bUBhZG9iZS5jb20iLCJpYXQiOjE1ODEwMjg2MjMsImV4cCI6MTYxMjU2NDYyM30.oNwhwkfkOr42aw6vv2MY0ahTML2B-SCxG9YxKig4tb8'}
+         });
+      global.streamingEnpointUrl = coreResults.data.result.streamingEnpointUrl;
+      global.tenantID = coreResults.data.result.tenantID;
+      global.schemaID = "93ee928c3766396daccb4145ef904429acb288f408bbbd94";
+      let dataSets = coreResults.data.result.dataSets;
+      //console.log('streamingEnpointUrl : '+streamingEnpointUrl + '   tenantID: '+tenantID);
+      //getDatasetByName
+      let datasetID = Object.entries(dataSets).find(obj => obj[1].name === "Demo System - Event Dataset for Website (FSI v1.0)")[0].replace(/%/g, "");
+
+      //Update XDM schema
+      formData = {
+        "header": {
+                "datasetId": dataSets[datasetID].id,
+                "imsOrgId": orgID,
+                "source": {
+                  "name": "web"
+                },
+                "schemaRef": {
+                  "id": "https://ns.adobe.com/"+tenantID+"/schemas/"+schemaID,
+                  "contentType": "application/vnd.adobe.xed-full+json;version=1"
+                }
+              },
+              "body": {
+                "xdmMeta": {
+                  "schemaRef": {
+                    "id": "https://ns.adobe.com/"+tenantID+"/schemas/"+schemaID,
+                    "contentType": "application/vnd.adobe.xed-full+json;version=1"
+                  }
+                },
+                "xdmEntity": {
+                  "_id": ""+Date.now(),
+                  "timestamp": ""+new Date().toISOString()
+                  //"eventType": "Bot - Interested in - "+choice.value
+
+                  }
+                }
+              }
+    }
+
     async promptInterestSelectionStep(stepContext) {
         // Continue using the same selection list, if any, from the previous iteration of this dialog.
         const list = Array.isArray(stepContext.options) ? stepContext.options : [];
         stepContext.values[this.interestSelected] = list;
-
+        console.log("global.eeIngestUrl : "+ global.eeIngestUrl);
+        ingestData();
         // Create a prompt message.
         let message = 'Would you like to learn more about our latest offers?';
         const options = this.interestOptions.filter(function(item) { return item !== list[0]; })
@@ -65,7 +114,7 @@ class InterestReviewSelectionDialog extends ComponentDialog {
         var list = stepContext.values[this.interestSelected];
         const choice = stepContext.result;
         const done = choice.value === this.doneOption;
-
+        ingestData();
         if (!done) {
             // If they chose a company, add it to the list.
             list.push(choice.value);
@@ -74,9 +123,8 @@ class InterestReviewSelectionDialog extends ComponentDialog {
         if (!done && list.length > 0) {
             list =[];
             var formData = global.formData;
+
             console.log("formdata-interest selection")
-            const promptOptions = { prompt: 'global.formData: '+global.formData};
-            return await stepContext.prompt(TEXT_PROMPT, promptOptions);
             if(formData){
             formData.body.xdmEntity.eventType = "Bot - Interested in - "+choice.value;
             formData.body.xdmEntity['_'+global.tenantID] = {
@@ -90,7 +138,6 @@ class InterestReviewSelectionDialog extends ComponentDialog {
                                                       }
                                                     }
                                                   }
-
 
             //Ingest data in AEP using streaming end point
             let headers = {
@@ -185,6 +232,7 @@ list.push(choice.value);
 
         }
     }
+
 }
 
 module.exports.InterestReviewSelectionDialog = InterestReviewSelectionDialog;
