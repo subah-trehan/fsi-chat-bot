@@ -19,8 +19,8 @@ class DialogBot extends ActivityHandler {
         global.ecid ="";
         global.orgID ="";
         global.sandboxName ="";
-        global.eeIngestUrl = '';
-        global.getProfileUrl = '';
+        global.eeIngestUrl = "https://dashboard-test.adobedemo.com/api/aep";
+        global.getProfileUrl = "https://dashboard.adobedemo.com/api/aep/profile";
         global.loggedInUser = '';
         global.accountId = '';
         global.action=0;
@@ -67,7 +67,7 @@ class DialogBot extends ActivityHandler {
             // await next();
 
         });
-      
+
     }
 
 

@@ -10,7 +10,7 @@ const USER_PROFILE_PROPERTY = 'USER_PROFILE_PROPERTY';
 const axios = require("axios");
 const LOGGEDIN_USER = 'logggedInUserProperty';
 const { UserProfile } = require('../userProfile');
-class MainDialog extends ComponentDialog {
+class MainDialog extends ComponentDialog { 
     constructor(userState) {
 
         super(MAIN_DIALOG);
@@ -47,6 +47,8 @@ class MainDialog extends ComponentDialog {
     }
 
     async initialStep(stepContext) {
+
+
         var name = '';
         var ecid = global.ecid;
         var orgId= global.orgID;
@@ -85,6 +87,52 @@ class MainDialog extends ComponentDialog {
              global.loggedInUser = '';
                global.accountId = '';
          }
+
+         let coreResults = await axios({
+              url: global.eeIngestUrl,
+              params: {
+                orgId:global.orgID,
+                sandboxName:global.sandboxName
+              },
+              method: 'GET',
+               headers:  { 'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsZGFwSUQiOiJoZWxpdW0iLCJlbWFpbCI6ImhlbGl1bUBhZG9iZS5jb20iLCJpYXQiOjE1ODEwMjg2MjMsImV4cCI6MTYxMjU2NDYyM30.oNwhwkfkOr42aw6vv2MY0ahTML2B-SCxG9YxKig4tb8'}
+            });
+         global.streamingEnpointUrl = coreResults.data.result.streamingEnpointUrl;
+         global.tenantID = coreResults.data.result.tenantID;
+         global.schemaID = "93ee928c3766396daccb4145ef904429acb288f408bbbd94";
+         let dataSets = coreResults.data.result.dataSets;
+         //getDatasetByName
+         let datasetID = Object.entries(dataSets).find(obj => obj[1].name === "Demo System - Event Dataset for Website (FSI v1.0)")[0].replace(/%/g, "");
+
+         //Update XDM schema
+         global.formData = {
+           "header": {
+                   "datasetId": dataSets[datasetID].id,
+                   "imsOrgId": global.orgID,
+                   "source": {
+                     "name": "web"
+                   },
+                   "schemaRef": {
+                     "id": "https://ns.adobe.com/"+global.tenantID+"/schemas/"+global.schemaID,
+                     "contentType": "application/vnd.adobe.xed-full+json;version=1"
+                   }
+                 },
+                 "body": {
+                   "xdmMeta": {
+                     "schemaRef": {
+                       "id": "https://ns.adobe.com/"+global.tenantID+"/schemas/"+global.schemaID,
+                       "contentType": "application/vnd.adobe.xed-full+json;version=1"
+                     }
+                   },
+                   "xdmEntity": {
+                     "_id": ""+Date.now(),
+                     "timestamp": ""+new Date().toISOString()
+
+                     }
+                   }
+                 }
+
+
         return await stepContext.beginDialog(TOP_LEVEL_DIALOG);
     }
 

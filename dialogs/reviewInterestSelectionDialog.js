@@ -15,7 +15,7 @@ class InterestReviewSelectionDialog extends ComponentDialog {
     constructor() {
         super(INTEREST_REVIEW_SELECTION_DIALOG);
 
-        // Define a "done" response for the interest selection prompt.
+        // Define a "done" response for the interest selection prompt. 
         this.doneOption = 'No';
 
         // Define value names for values tracked inside the dialogs.
@@ -44,60 +44,11 @@ class InterestReviewSelectionDialog extends ComponentDialog {
         this.initialDialogId = WATERFALL_DIALOG;
     }
 
-    async ingestData(){
-      let coreResults = await axios({
-           url: global.eeIngestUrl,
-           params: {
-             orgId:global.orgID,
-             sandboxName:global.sandboxName
-           },
-           method: 'GET',
-            headers:  { 'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsZGFwSUQiOiJoZWxpdW0iLCJlbWFpbCI6ImhlbGl1bUBhZG9iZS5jb20iLCJpYXQiOjE1ODEwMjg2MjMsImV4cCI6MTYxMjU2NDYyM30.oNwhwkfkOr42aw6vv2MY0ahTML2B-SCxG9YxKig4tb8'}
-         });
-      global.streamingEnpointUrl = coreResults.data.result.streamingEnpointUrl;
-      global.tenantID = coreResults.data.result.tenantID;
-      global.schemaID = "93ee928c3766396daccb4145ef904429acb288f408bbbd94";
-      let dataSets = coreResults.data.result.dataSets;
-      //console.log('streamingEnpointUrl : '+streamingEnpointUrl + '   tenantID: '+tenantID);
-      //getDatasetByName
-      let datasetID = Object.entries(dataSets).find(obj => obj[1].name === "Demo System - Event Dataset for Website (FSI v1.0)")[0].replace(/%/g, "");
-
-      //Update XDM schema
-      global.formData = {
-        "header": {
-                "datasetId": dataSets[datasetID].id,
-                "imsOrgId": global.orgID,
-                "source": {
-                  "name": "web"
-                },
-                "schemaRef": {
-                  "id": "https://ns.adobe.com/"+global.tenantID+"/schemas/"+global.schemaID,
-                  "contentType": "application/vnd.adobe.xed-full+json;version=1"
-                }
-              },
-              "body": {
-                "xdmMeta": {
-                  "schemaRef": {
-                    "id": "https://ns.adobe.com/"+global.tenantID+"/schemas/"+global.schemaID,
-                    "contentType": "application/vnd.adobe.xed-full+json;version=1"
-                  }
-                },
-                "xdmEntity": {
-                  "_id": ""+Date.now(),
-                  "timestamp": ""+new Date().toISOString()
-                  //"eventType": "Bot - Interested in - "+choice.value
-
-                  }
-                }
-              }
-    }
 
     async promptInterestSelectionStep(stepContext) {
         // Continue using the same selection list, if any, from the previous iteration of this dialog.
         const list = Array.isArray(stepContext.options) ? stepContext.options : [];
         stepContext.values[this.interestSelected] = list;
-        console.log("global.eeIngestUrl : "+ global.eeIngestUrl);
-        ingestData();
         // Create a prompt message.
         let message = 'Would you like to learn more about our latest offers?';
         const options = this.interestOptions.filter(function(item) { return item !== list[0]; })
@@ -151,7 +102,6 @@ class InterestReviewSelectionDialog extends ComponentDialog {
              console.log("results",data);
            }
               if (!loggedInUser) {
-                console.log("retreiveInterestSelectionStep4");
             stepContext.values.userInfo = new UserProfile();
             const promptOptions = { prompt: 'Please share your email address for further communication.'};
             return await stepContext.prompt(TEXT_PROMPT, promptOptions);
@@ -162,8 +112,6 @@ class InterestReviewSelectionDialog extends ComponentDialog {
 
 
         } else {
-            console.log("end Selection");
-            //return await stepContext.replaceDialog(INTEREST_REVIEW_SELECTION_DIALOG, list);
             endSelection = true ;
              return await stepContext.beginDialog(REVIEW_RATING_DIALOG);
         }
@@ -175,7 +123,7 @@ class InterestReviewSelectionDialog extends ComponentDialog {
                 return await stepContext.endDialog();
 
           }
-        await stepContext.context.sendActivity('I created a case and our consulant will get back to you today with the offer details.'+global.formData);
+        await stepContext.context.sendActivity('I created a case and our consulant will get back to you today with the offer details.');
                await stepContext.context.sendActivity('Is there anything else I can help you with today?');
              return await stepContext.next();
     }

@@ -11,7 +11,7 @@ const REPEAT_SELECTION_DIALOG = 'REPEAT_SELECTION_DIALOG';
 const CHOICE_PROMPT = 'CHOICE_PROMPT';
 const WATERFALL_DIALOG = 'WATERFALL_DIALOG';
 
-class RepeatSelectionDialog extends ComponentDialog {
+class RepeatSelectionDialog extends ComponentDialog { 
     constructor() {
         super(REPEAT_SELECTION_DIALOG);
 

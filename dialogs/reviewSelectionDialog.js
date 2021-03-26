@@ -16,7 +16,7 @@ class ReviewSelectionDialog extends ComponentDialog {
     constructor() {
         super(REVIEW_SELECTION_DIALOG);
 
-        // Define a "done" response for the selection prompt.
+        // Define a "done" response for the selection prompt. 
         this.doneOption = 'done';
 
         // Define value names for values tracked inside the dialogs.
@@ -58,7 +58,9 @@ class ReviewSelectionDialog extends ComponentDialog {
         this.initialDialogId = WATERFALL_DIALOG;
     }
 
+
     async mainSelectionStep(stepContext) {
+
 
         const list = Array.isArray(stepContext.options) ? stepContext.options : [];
         stepContext.values[this.optionSelected] = list;
@@ -84,11 +86,6 @@ class ReviewSelectionDialog extends ComponentDialog {
 
         if (done || list.length > 0) {
 
-
-              //eeIngestUrl = eeIngestUrl + '&offer='+choice.value;
-            //  let offerUrl = eeIngestUrl + '&offer='+choice.value;
-             //let results = await axios.get(offerUrl);
-             //console.log("####results :######"+results.data.body);
              var formData = global.formData;
              console.log("formdata-interest selection")
              if(formData){
@@ -147,7 +144,6 @@ class ReviewSelectionDialog extends ComponentDialog {
       async confirmSelectionStep(stepContext) {
           console.log("global.action", global.action)
           if(global.action == 1){
-               console.log('after1')
         stepContext.values.userInfo = new UserProfile();
         const list = Array.isArray(stepContext.options) ? stepContext.options : [];
         stepContext.values[this.reviewOptionSelected] = list;
@@ -168,7 +164,6 @@ class ReviewSelectionDialog extends ComponentDialog {
         var list = stepContext.values[this.reviewOptionSelected];
         const choice = stepContext.result;
         const done = choice.value === this.doneOption;
-         console.log('after2')
         if (!done) {
 
             list.push(choice.value);
@@ -195,7 +190,6 @@ class ReviewSelectionDialog extends ComponentDialog {
     }
 
      async repeatSelectionStep(stepContext) {
-          console.log('after3')
         // Retrieve their selection list, the choice they made, and whether they chose to finish.
           if(global.repeatSelection == true){
               global.repeatSelection = false ;
