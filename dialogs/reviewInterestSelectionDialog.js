@@ -74,9 +74,10 @@ class InterestReviewSelectionDialog extends ComponentDialog {
             list =[];
             var formData = global.formData;
 
-            console.log("formdata-interest selection")
+
             if(formData){
-            formData.body.xdmEntity.eventType = "Bot - Interested in - "+choice.value;
+
+            formData.body.xdmEntity.eventType = "Bot - Interested in - "+ choice.value;
             formData.body.xdmEntity['_'+global.tenantID] = {
                                                       "identification":{"core" :{
                                                         "ecid": global.ecid
@@ -89,6 +90,9 @@ class InterestReviewSelectionDialog extends ComponentDialog {
                                                     }
                                                   }
 
+            formData.body.xdmEntity._id = ""+Date.now();
+            formData.body.xdmEntity.timestamp = ""+new Date().toISOString()
+
             //Ingest data in AEP using streaming end point
             let headers = {
               "Content-Type": "application/json",
@@ -96,6 +100,7 @@ class InterestReviewSelectionDialog extends ComponentDialog {
             let result = await axios.post(global.streamingEnpointUrl, formData, {
               headers: headers
             });
+            console.log("Interest Selection", formData)
             let data = result.data;
            }
               if (!loggedInUser) {

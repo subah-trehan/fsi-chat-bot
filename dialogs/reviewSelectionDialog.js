@@ -16,7 +16,7 @@ class ReviewSelectionDialog extends ComponentDialog {
     constructor() {
         super(REVIEW_SELECTION_DIALOG);
 
-        // Define a "done" response for the selection prompt. 
+        // Define a "done" response for the selection prompt.
         this.doneOption = 'done';
 
         // Define value names for values tracked inside the dialogs.
@@ -52,7 +52,7 @@ class ReviewSelectionDialog extends ComponentDialog {
             this.retrieveMainSelectionStep.bind(this),
              this.confirmSelectionStep.bind(this),
              this.retrieveConfirmSelectionStep.bind(this),
-             this.repeatSelectionStep.bind(this) 
+             this.repeatSelectionStep.bind(this)
         ]));
 
         this.initialDialogId = WATERFALL_DIALOG;
@@ -87,7 +87,6 @@ class ReviewSelectionDialog extends ComponentDialog {
         if (done || list.length > 0) {
 
              var formData = global.formData;
-             console.log("formdata-interest selection")
              if(formData){
              formData.body.xdmEntity.eventType = "Bot - Interested in - "+choice.value;
              formData.body.xdmEntity['_'+global.tenantID] = {
@@ -101,7 +100,8 @@ class ReviewSelectionDialog extends ComponentDialog {
                                                        }
                                                      }
                                                    }
-
+            formData.body.xdmEntity._id = ""+Date.now();
+            formData.body.xdmEntity.timestamp = ""+new Date().toISOString()
              //Ingest data in AEP using streaming end point
              let headers = {
                "Content-Type": "application/json",
@@ -110,9 +110,7 @@ class ReviewSelectionDialog extends ComponentDialog {
                headers: headers
              });
              let data = result.data;
-             //let offerUrl = eeIngestUrl + '&offer='+choice.value;
-             // let results = await axios.get(offerUrl);
-              console.log("results",data);
+            
             }
 
 

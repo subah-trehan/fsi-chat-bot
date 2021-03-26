@@ -141,7 +141,7 @@ class MainDialog extends ComponentDialog {
     async finalStep(stepContext) {
 
         if( stepContext.result && stepContext.result.review == 'Yes'){
-       console.log("acknowledgementStep:condition1")
+      
         return await stepContext.beginDialog(REVIEW_SELECTION_DIALOG);
         } else{
       console.log("final step")

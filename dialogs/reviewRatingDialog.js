@@ -74,9 +74,9 @@ class ReviewRatingDialog extends ComponentDialog {
 
              //eeIngestUrl = eeIngestUrl + '&rating='+choice.value;
              var formData = global.formData;
-             console.log("formdata1");
+
              if(formData){
-             formData.body.xdmEntity.eventType = "Bot - Rate Chat - "+choice.value;
+             formData.body.xdmEntity.eventType = "Bot - Rate Chat - "+ Number(choice.value);
              formData.body.xdmEntity['_'+global.tenantID] = {
                                                        "identification":{"core" :{
                                                          "ecid": global.ecid
@@ -88,7 +88,8 @@ class ReviewRatingDialog extends ComponentDialog {
                                                        }
                                                      }
                                                    }
-
+            formData.body.xdmEntity._id = ""+Date.now();
+            formData.body.xdmEntity.timestamp = ""+new Date().toISOString()
              //Ingest data in AEP using streaming end point
              let headers = {
                "Content-Type": "application/json",
@@ -96,6 +97,7 @@ class ReviewRatingDialog extends ComponentDialog {
              let result = await axios.post(global.streamingEnpointUrl, formData, {
                headers: headers
              });
+            
              let results = result.data;
             }
              //let ratingUrl = eeIngestUrl + '&rating='+choice.value;
