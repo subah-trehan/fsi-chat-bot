@@ -19,13 +19,13 @@ class ReviewDialog extends ComponentDialog {
         this.doneOption = 'done';
         this.reviewOptionSelected = 'value-reviewOptionSelected';
         this.reviewOptions = ['Yes', 'No'];
-        
+
         this.addDialog(new ChoicePrompt(CHOICE_PROMPT));
         //this.addDialog(new InterestReviewSelectionDialog());
-        
+
       // this.addDialog(new RepeatSelectionDialog());
         this.addDialog(new ReviewRatingDialog());
-      
+
         this.addDialog(new WaterfallDialog(WATERFALL_DIALOG, [
             this.selectionStep.bind(this),
             this.loopStep.bind(this)
@@ -61,17 +61,15 @@ class ReviewDialog extends ComponentDialog {
         var list = stepContext.values[this.reviewOptionSelected];
         const choice = stepContext.result;
         const done = choice.value === this.doneOption;
-        
+
         if (!done) {
-           
+
             list.push(choice.value);
         }
 
         if (done || list.length > 0) {
           const userProfile = stepContext.values.userInfo;
-          console.log("reaching here")
           userProfile.review= stepContext.result.value || [];
-           console.log("reaching here1")
             // If they're done, exit and return their list.
             if(`${ list[0] }` == this.reviewOptions[1]){
                 list =[];
@@ -84,7 +82,7 @@ class ReviewDialog extends ComponentDialog {
                   return  await stepContext.endDialog(userProfile);
                  //  return await stepContext.beginDialog(REPEAT_SELECTION_DIALOG);
             }
-            
+
         } else {
             // Otherwise, repeat this dialog, passing in the list from this iteration.
             return await stepContext.replaceDialog(REVIEW_DIALOG, list);

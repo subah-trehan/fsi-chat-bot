@@ -11,7 +11,7 @@ const REPEAT_SELECTION_DIALOG = 'REPEAT_SELECTION_DIALOG';
 const CHOICE_PROMPT = 'CHOICE_PROMPT';
 const WATERFALL_DIALOG = 'WATERFALL_DIALOG';
 
-class RepeatSelectionDialog extends ComponentDialog { 
+class RepeatSelectionDialog extends ComponentDialog {
     constructor() {
         super(REPEAT_SELECTION_DIALOG);
 
@@ -23,12 +23,12 @@ class RepeatSelectionDialog extends ComponentDialog {
 
         // Define the company choices for the  selection prompt.
         this.reviewOptions = ['Yes', 'No'];
-        
+
         this.addDialog(new ChoicePrompt(CHOICE_PROMPT));
         //this.addDialog(new InterestReviewSelectionDialog());
-        
+
         this.addDialog(new ReviewSelectionDialog());
-      
+
         this.addDialog(new WaterfallDialog(WATERFALL_DIALOG, [
             this.selectionStep.bind(this),
            // this.loopStep.bind(this)
@@ -47,17 +47,15 @@ class RepeatSelectionDialog extends ComponentDialog {
         var list = stepContext.values[this.reviewOptionSelected];
         const choice = stepContext.result;
         const done = choice.value === this.doneOption;
-        
+
         if (!done) {
-           
+
             list.push(choice.value);
         }
 
         if (done || list.length > 0) {
           const userProfile = stepContext.values.userInfo;
-          console.log("reaching here")
           userProfile.review= stepContext.result.value || [];
-           console.log("reaching here1")
             // If they're done, exit and return their list.
             if(`${ list[0] }` == this.reviewOptions[1]){
                 list =[];
@@ -69,7 +67,7 @@ class RepeatSelectionDialog extends ComponentDialog {
                  console.log(`reviewDialog ${ list[0] }`)
                   return  await stepContext.endDialog(userProfile);
             }
-            
+
         } else {
             // Otherwise, repeat this dialog, passing in the list from this iteration.
             return await stepContext.replaceDialog(REVIEW_DIALOG, list);

@@ -15,7 +15,7 @@ class InterestReviewSelectionDialog extends ComponentDialog {
     constructor() {
         super(INTEREST_REVIEW_SELECTION_DIALOG);
 
-        // Define a "done" response for the interest selection prompt. 
+        // Define a "done" response for the interest selection prompt.
         this.doneOption = 'No';
 
         // Define value names for values tracked inside the dialogs.
@@ -97,9 +97,6 @@ class InterestReviewSelectionDialog extends ComponentDialog {
               headers: headers
             });
             let data = result.data;
-            //let offerUrl = eeIngestUrl + '&offer='+choice.value;
-            // let results = await axios.get(offerUrl);
-             console.log("results",data);
            }
               if (!loggedInUser) {
             stepContext.values.userInfo = new UserProfile();

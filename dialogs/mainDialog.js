@@ -10,7 +10,7 @@ const USER_PROFILE_PROPERTY = 'USER_PROFILE_PROPERTY';
 const axios = require("axios");
 const LOGGEDIN_USER = 'logggedInUserProperty';
 const { UserProfile } = require('../userProfile');
-class MainDialog extends ComponentDialog { 
+class MainDialog extends ComponentDialog {
     constructor(userState) {
 
         super(MAIN_DIALOG);
@@ -53,6 +53,7 @@ class MainDialog extends ComponentDialog {
         var ecid = global.ecid;
         var orgId= global.orgID;
         var sandboxName =  global.sandboxName;
+        var tenant= "_"+global.tenantID;
          try {
         let results = await axios({
              url: global.getProfileUrl,
@@ -68,12 +69,12 @@ class MainDialog extends ComponentDialog {
            });
            console.log("results: "+results.data)
         if(results && Object.values(results.data.result)[0].entity.identityMap.email[0].id){
-           console.log("####accountid :######"+Object.values(results.data.result)[0].entity._salesvelocity.identification.fsi.accountId);
-                    console.log("#### name:######"+Object.values(results.data.result)[0].entity.person.name.firstName);
+           //console.log("####accountid :######"+Object.values(results.data.result)[0].entity._salesvelocity.identification.fsi.accountId);
+                    //console.log("#### name:######"+Object.values(Object.values(results.data.result)[0].entity)[1].identification.fsi.accountId);
                               // console.log("####email :######"+Object.values(Object.values(Object.values(results.data.result)[0].entity)[0].identification.core.email);
 
               loggedInUser = Object.values(results.data.result)[0].entity.person.name.firstName;
-              accountId = Object.values(results.data.result)[0].entity._salesvelocity.identification.fsi.accountId ;
+              accountId = Object.values(Object.values(results.data.result)[0].entity)[1].identification.fsi.accountId ;
 
            console.log("logged in user",loggedInUser);
          }

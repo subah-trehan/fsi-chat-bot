@@ -52,7 +52,7 @@ class ReviewSelectionDialog extends ComponentDialog {
             this.retrieveMainSelectionStep.bind(this),
              this.confirmSelectionStep.bind(this),
              this.retrieveConfirmSelectionStep.bind(this),
-             this.repeatSelectionStep.bind(this)
+             this.repeatSelectionStep.bind(this) 
         ]));
 
         this.initialDialogId = WATERFALL_DIALOG;
