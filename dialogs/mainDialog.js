@@ -68,7 +68,7 @@ class MainDialog extends ComponentDialog {
              headers: { 'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsZGFwSUQiOiJoZWxpdW0iLCJlbWFpbCI6ImhlbGl1bUBhZG9iZS5jb20iLCJpYXQiOjE1ODEwMjg2MjMsImV4cCI6MTYxMjU2NDYyM30.oNwhwkfkOr42aw6vv2MY0ahTML2B-SCxG9YxKig4tb8'}
            });
            console.log("results: "+results.data)
-        if(results && Object.values(results.data.result)[0].entity.identityMap.email[0].id){
+       if(results && Object.values(Object.values(results.data.result)[0].entity)[1].identification.core.email){
            //console.log("####accountid :######"+Object.values(results.data.result)[0].entity._salesvelocity.identification.fsi.accountId);
                     //console.log("#### name:######"+Object.values(Object.values(results.data.result)[0].entity)[1].identification.fsi.accountId);
                               // console.log("####email :######"+Object.values(Object.values(Object.values(results.data.result)[0].entity)[0].identification.core.email);
